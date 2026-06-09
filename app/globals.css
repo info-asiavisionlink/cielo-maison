@@ -1,26 +1,414 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-family-serif: var(--font-cormorant);
+  --font-family-sans: var(--font-inter);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ============================================================
+   CIELO DESIGN TOKENS
+   ============================================================ */
+:root {
+  --cielo-black:         #0A0A0A;
+  --cielo-deep:          #050505;
+  --cielo-dark-1:        #050505;
+  --cielo-dark-2:        #070707;
+  --cielo-dark-3:        #0B0B0B;
+  --cielo-dark-4:        #111111;
+  --cielo-gold:          #B8962E;
+  --cielo-gold-dim:      rgba(184, 150, 46, 0.55);
+  --cielo-gold-subtle:   rgba(184, 150, 46, 0.15);
+  --cielo-gold-glow:     rgba(184, 150, 46, 0.07);
+  --cielo-white:         #FAFAF8;
+  --cielo-cream:         #F5F0E8;
+  --cielo-platinum:      #C8C8C8;
+  --cielo-charcoal:      #1A1A1A;
+}
+
+/* ============================================================
+   RESET
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  background-color: var(--cielo-dark-1);
+  color: var(--cielo-white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter, 'Inter', sans-serif);
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  background: transparent;
+}
+
+/* ============================================================
+   MARBLE BACKGROUND — MULTI-LAYER SYSTEM
+   ============================================================ */
+.marble-base {
+  background:
+    radial-gradient(ellipse 130% 70% at 50% 0%,    var(--cielo-dark-4) 0%, var(--cielo-dark-3) 25%, var(--cielo-dark-2) 55%, var(--cielo-dark-1) 100%),
+    radial-gradient(ellipse 80%  120% at 0% 100%,   var(--cielo-dark-3) 0%, transparent 60%),
+    radial-gradient(ellipse 60%  80%  at 100% 0%,   var(--cielo-dark-3) 0%, transparent 50%);
+}
+
+.marble-texture {
+  background:
+    radial-gradient(ellipse 1.5%  60%  at 18% 28%, rgba(32, 29, 21, 0.60) 0%, transparent 100%),
+    radial-gradient(ellipse 1%    45%  at 72% 18%, rgba(26, 24, 17, 0.50) 0%, transparent 100%),
+    radial-gradient(ellipse 2%    38%  at 48% 72%, rgba(29, 27, 19, 0.45) 0%, transparent 100%),
+    radial-gradient(ellipse 0.8%  52%  at 33% 55%, rgba(22, 20, 15, 0.40) 0%, transparent 100%),
+    radial-gradient(ellipse 75%   45%  at 10% 85%, rgba(10,  9,  7, 0.30) 0%, transparent 100%),
+    radial-gradient(ellipse 60%   80%  at 90% 35%, rgba(8,   8,  6, 0.20) 0%, transparent 100%);
+  mix-blend-mode: soft-light;
+}
+
+.marble-gold {
+  background:
+    radial-gradient(ellipse 80%  45%  at 50% -5%,  rgba(184,150,46,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 45%  35%  at 88% 42%,  rgba(184,150,46,0.05) 0%, transparent 55%),
+    radial-gradient(ellipse 35%  25%  at 12% 75%,  rgba(184,150,46,0.04) 0%, transparent 50%),
+    radial-gradient(ellipse 60%  20%  at 50% 100%, rgba(180,148,44,0.03) 0%, transparent 60%);
+}
+
+.marble-ambient {
+  background:
+    radial-gradient(ellipse 65% 50% at 50% 25%, rgba(184,150,46,0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 30% at 75% 60%, rgba(184,150,46,0.03) 0%, transparent 60%);
+  animation: ambientBreathe 22s ease-in-out infinite;
+  will-change: opacity;
+}
+
+.marble-float {
+  background:
+    radial-gradient(ellipse 50% 40% at 30% 40%, rgba(184,150,46,0.04) 0%, transparent 65%);
+  animation: ambientFloat 30s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.marble-vignette {
+  background:
+    radial-gradient(ellipse 95% 95% at 50% 50%, transparent 30%, rgba(2,2,2,0.65) 100%);
+}
+
+@keyframes ambientBreathe {
+  0%, 100% { opacity: 0.35; }
+  35%       { opacity: 0.75; }
+  65%       { opacity: 0.30; }
+}
+
+@keyframes ambientFloat {
+  0%   { opacity: 0.4; transform: translate(0,    0);   }
+  30%  { opacity: 0.6; transform: translate(4%, -3%);  }
+  60%  { opacity: 0.3; transform: translate(-3%, 5%);  }
+  100% { opacity: 0.4; transform: translate(0,    0);  }
+}
+
+/* ============================================================
+   FILM GRAIN ANIMATION
+   ============================================================ */
+@keyframes noiseShift {
+  0%   { transform: translate(0,    0);   }
+  25%  { transform: translate(-4%, -4%); }
+  50%  { transform: translate(4%,   4%);  }
+  75%  { transform: translate(-4%,  4%);  }
+  100% { transform: translate(0,    0);   }
+}
+
+/* ============================================================
+   TYPOGRAPHY — Cinematic luxury hierarchy
+   ============================================================ */
+.font-serif { font-family: var(--font-cormorant, 'Cormorant Garamond', serif); }
+
+.cielo-wordmark {
+  font-family: var(--font-cormorant, 'Cormorant Garamond', serif);
+  font-weight: 400;
+  letter-spacing: 0.42em;
+  color: var(--cielo-gold);
+}
+
+.cielo-tagline {
+  font-family: var(--font-cormorant, 'Cormorant Garamond', serif);
+  font-style: italic;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  color: var(--cielo-platinum);
+}
+
+.section-heading {
+  font-family: var(--font-cormorant, 'Cormorant Garamond', serif);
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  color: var(--cielo-white);
+  line-height: 1.25;
+}
+
+.section-label {
+  font-family: var(--font-inter, 'Inter', sans-serif);
+  font-weight: 300;
+  font-size: 0.5625rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--cielo-gold-dim);
+}
+
+.body-text {
+  font-family: var(--font-inter, 'Inter', sans-serif);
+  font-weight: 300;
+  line-height: 2.0;
+  letter-spacing: 0.04em;
+  color: var(--cielo-platinum);
+}
+
+/* ============================================================
+   DIVIDERS
+   ============================================================ */
+.gold-rule {
+  width: 40px;
+  height: 1px;
+  background: var(--cielo-gold-dim);
+  border: none;
+  margin: 0;
+}
+
+.gold-rule-full {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--cielo-gold-subtle), transparent);
+  border: none;
+  margin: 0;
+}
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+.nav-link {
+  font-family: var(--font-inter, 'Inter', sans-serif);
+  font-weight: 300;
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--cielo-platinum);
+  text-decoration: none;
+  transition: color 0.4s ease, letter-spacing 0.4s ease;
+}
+
+.nav-link-gold {
+  font-family: var(--font-inter, 'Inter', sans-serif);
+  font-weight: 300;
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--cielo-gold-dim);
+  text-decoration: none;
+  transition: color 0.4s ease, letter-spacing 0.4s ease;
+}
+
+/* ── Luxury hover: letter-spacing opens, gold glow ── */
+.cielo-hover:hover {
+  letter-spacing: 0.22em;
+}
+
+.nav-link.cielo-hover:hover  { color: var(--cielo-white); }
+.nav-link-gold.cielo-hover:hover { color: var(--cielo-gold); }
+
+/* ============================================================
+   LANGUAGE SWITCHER
+   ============================================================ */
+.lang-item {
+  font-family: var(--font-inter, 'Inter', sans-serif);
+  font-weight: 300;
+  font-size: 0.625rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(200,200,200,0.38);
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  transition: color 0.35s ease;
+}
+
+.lang-item:hover,
+.lang-item.active { color: var(--cielo-white); }
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero-slide {
+  position: absolute;
+  inset: 0;
+  transition: opacity 2.4s ease-in-out;
+}
+
+/* ============================================================
+   WORKS
+   ============================================================ */
+.work-caption {
+  font-family: var(--font-inter, 'Inter', sans-serif);
+  font-weight: 300;
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cielo-platinum);
+}
+
+.work-title {
+  font-family: var(--font-cormorant, 'Cormorant Garamond', serif);
+  font-style: italic;
+  font-weight: 300;
+  color: var(--cielo-white);
+}
+
+/* ============================================================
+   MEMBERSHIP TIERS
+   ============================================================ */
+.tier-silver   { color: var(--cielo-platinum); }
+.tier-gold     { color: var(--cielo-gold); }
+.tier-platinum { color: #D4D4D4; }
+.tier-diamond  { color: var(--cielo-white); }
+
+/* ============================================================
+   CTA LINK — luxury underline reveal
+   ============================================================ */
+.cta-link {
+  font-family: var(--font-inter, 'Inter', sans-serif);
+  font-weight: 300;
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--cielo-gold-dim);
+  text-decoration: none;
+  position: relative;
+  transition: color 0.45s ease, letter-spacing 0.45s ease;
+}
+
+.cta-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--cielo-gold);
+  transition: width 0.55s ease;
+}
+
+.cta-link:hover {
+  color: var(--cielo-gold);
+  letter-spacing: 0.26em;
+}
+
+.cta-link:hover::after { width: 100%; }
+
+/* ============================================================
+   SCROLL INDICATOR
+   ============================================================ */
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.25; transform: translateY(0); }
+  50%       { opacity: 0.55; transform: translateY(5px); }
+}
+
+/* ============================================================
+   MOBILE — Luxury refinement for all breakpoints
+   ============================================================ */
+@media (max-width: 768px) {
+
+  .desktop-nav { display: none !important; }
+
+  /* Work / Material / Collection cards: stack vertically */
+  .work-card,
+  .material-card {
+    grid-template-columns: 1fr !important;
+  }
+
+  .work-card > *,
+  .material-card > * {
+    grid-column: 1 !important;
+    grid-row: auto !important;
+  }
+
+  /* On mobile, image comes first regardless of isLeft */
+  .work-card > *:nth-child(1),
+  .material-card > *:nth-child(1) {
+    order: 0 !important;
+  }
+
+  /* Registry grid */
+  .registry-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Membership grid */
+  .membership-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Formats grid: 1 column */
+  .formats-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Install grid: 2 columns */
+  .install-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  /* Ownership pillars: 1 column */
+  .ownership-pillars {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Maison Structure grids */
+  .entity-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .corp-info-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  .domains-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  /* Body text refinements for mobile luxury */
+  .body-text {
+    line-height: 1.95;
+    letter-spacing: 0.03em;
+  }
+
+  /* Slightly closer heading tracking on small screens */
+  .section-heading {
+    letter-spacing: 0.06em;
+  }
+}
+
+@media (max-width: 480px) {
+  .body-text {
+    font-size: 0.9375rem !important;
+    line-height: 1.9;
+  }
+
+  .section-heading {
+    letter-spacing: 0.04em;
+  }
+
+  /* Install grid: 1 column on very small */
+  .install-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Ensure certificate card is readable */
+  .registry-grid > * {
+    min-width: 0;
+  }
+
+  .corp-info-grid,
+  .domains-grid {
+    grid-template-columns: 1fr !important;
+  }
 }
