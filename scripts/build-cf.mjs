@@ -13,7 +13,7 @@
  *   Build command      : npm run build
  *   Build output dir   : .open-next/assets
  *   Compat flag        : nodejs_compat
- *   Compat date        : 2025-01-01
+ *   Compat date        : 2025-09-01  (>= 2025-09-01 required for node:http/node:https)
  */
 
 import { execSync }                    from "node:child_process";
@@ -112,4 +112,4 @@ console.log(`\n  Cloudflare Pages settings:`);
 console.log(`    Build command      : npm run build`);
 console.log(`    Build output dir   : .open-next/assets`);
 console.log(`    Compatibility flag : nodejs_compat`);
-console.log(`    Compatibility date : 2025-01-01\n`);
+console.log(`    Compatibility date : 2025-09-01\n`);
