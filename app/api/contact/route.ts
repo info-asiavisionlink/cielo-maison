@@ -1,7 +1,7 @@
 export const runtime = "edge";
 
 import { NextRequest } from "next/server";
-import { resend, buildInquiryEmail } from "@/lib/resend";
+import { createResend, buildInquiryEmail } from "@/lib/resend";
 
 export async function POST(request: NextRequest) {
   try {
@@ -32,6 +32,10 @@ export async function POST(request: NextRequest) {
       contact: contact.trim(),
       inquiry: inquiry.trim(),
     });
+
+    // Initialise Resend inside the handler — env vars are only
+    // available at request time on Cloudflare Pages, never at build time.
+    const resend = createResend();
 
     const { error } = await resend.emails.send({
       from: "CIELO Maison <onboarding@resend.dev>",

@@ -1,6 +1,10 @@
 import { Resend } from "resend";
 
-export const resend = new Resend(process.env.RESEND_API_KEY);
+// Do NOT initialise at module scope — env vars are unavailable at build time
+// on Cloudflare Pages. Call createResend() inside each request handler.
+export function createResend(): Resend {
+  return new Resend(process.env.RESEND_API_KEY);
+}
 
 export function buildInquiryEmail(data: {
   name: string;
