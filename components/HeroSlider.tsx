@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
-import { supabase, type GalleryImage } from "@/lib/supabase";
+import { getSupabase, type GalleryImage } from "@/lib/supabase";
 import { useI18n } from "@/contexts/i18n";
 import { localizedTitle } from "@/lib/gallery-i18n";
 
@@ -16,7 +16,9 @@ export default function HeroSlider() {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    supabase
+    const client = getSupabase();
+    if (!client) { setLoaded(true); return; }
+    client
       .from("gallery_images")
       .select("*")
       .eq("is_featured", true)

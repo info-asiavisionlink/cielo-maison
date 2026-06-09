@@ -5,7 +5,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { Reveal, RevealRule } from "@/components/Reveal";
 import { useI18n } from "@/contexts/i18n";
-import { supabase, type GalleryImage } from "@/lib/supabase";
+import { getSupabase, type GalleryImage } from "@/lib/supabase";
 import { localizedTitle, localizedDescription } from "@/lib/gallery-i18n";
 
 // ── Edition plate component ──────────────────────────────────────────────────
@@ -337,7 +337,9 @@ export default function CollectionSection() {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    supabase
+    const client = getSupabase();
+    if (!client) { setLoaded(true); return; }
+    client
       .from("gallery_images")
       .select("*")
       .order("sort_order", { ascending: true })

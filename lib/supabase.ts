@@ -1,10 +1,27 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 
-const url = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!
+// ── Lazy singleton ────────────────────────────────────────────────────────────
+// Never instantiate at module scope. Cloudflare Pages build runs module
+// evaluation without env vars — calling createClient(undefined, undefined)
+// throws "supabaseUrl is required" and fails prerendering.
+let _client: SupabaseClient | null = null
 
-export const supabase = createClient(url, key)
+export function getSupabase(): SupabaseClient | null {
+  if (_client) return _client
 
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+
+  if (!url || !key) {
+    // Build time or missing config — return null, callers handle gracefully
+    return null
+  }
+
+  _client = createClient(url, key)
+  return _client
+}
+
+// ── Types ─────────────────────────────────────────────────────────────────────
 export type GalleryImage = {
   id: string
   image_url: string
